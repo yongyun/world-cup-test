@@ -6,14 +6,12 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
-      /* 強制讓相機畫面充滿全螢幕，避免白色區塊 */
       body { margin: 0; overflow: hidden; }
-      .mindar-ui-scanning { display: block !important; }
     </style>
   </head>
   <body>
     <a-scene 
-      mindar-image="imageTargetSrc: ./targets.mind;" 
+      mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 10"
       color-space="sRGB" 
       renderer="colorManagement: true, physicallyCorrectLights" 
       vr-mode-ui="enabled: false" 
@@ -22,8 +20,9 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-image src="./overlay.png" position="1.5 0 0" width="1" height="1"></a-image>
+        <a-image src="./overlay.png" position="0 0 0" width="1" height="1"></a-image>
       </a-entity>
+
     </a-scene>
   </body>
 </html>
