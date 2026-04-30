@@ -11,7 +11,7 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 99999"
+      mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 5"
       color-space="sRGB"
       renderer="colorManagement: true"
       vr-mode-ui="enabled: false"
@@ -23,9 +23,8 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- 正常 AR 追蹤層（跟著封面走） -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-image src="#overlay-img" position="0 0 0" width="1" height="1"></a-image>
+        <a-image id="ar-img" src="#overlay-img" position="0 0 0" width="1" height="1"></a-image>
       </a-entity>
 
     </a-scene>
@@ -36,10 +35,20 @@
 
         sceneEl.addEventListener("loaded", () => {
           const target = document.querySelector("[mindar-image-target]");
+          let found = false;
 
           target.addEventListener("targetFound", () => {
-            // 辨識成功後，missTolerance 超大值讓圖片幾乎不消失
-            console.log("找到目標！");
+            found = true;
+          });
+
+          target.addEventListener("targetLost", () => {
+            // 找到過一次之後，就算失去追蹤也不隱藏
+            if (found) {
+              const arImg = document.getElementById("ar-img");
+              arImg.setAttribute("visible", "true");
+              // 強制讓 entity 保持顯示
+              target.object3D.visible = true;
+            }
           });
         });
       });
