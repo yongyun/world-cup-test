@@ -17,27 +17,30 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false">
 
+      <a-assets>
+        <img id="overlay-img" src="./overlay.png"/>
+      </a-assets>
+
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+      <!-- 正常 AR 追蹤層（跟著封面走） -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-image id="ar-image" src="./overlay.png" position="0 0 0" width="1" height="1" visible="false"></a-image>
-      </a-entity>
-
-      <!-- 辨識後圖片會移到這裡，固定在螢幕中央 -->
-      <a-entity id="fixed-overlay" position="0 0 -2" visible="false">
-        <a-image src="./overlay.png" width="1.5" height="1.5"></a-image>
+        <a-image src="#overlay-img" position="0 0 0" width="1" height="1"></a-image>
       </a-entity>
 
     </a-scene>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const target = document.querySelector("[mindar-image-target]");
-        const fixedOverlay = document.getElementById("fixed-overlay");
+        const sceneEl = document.querySelector("a-scene");
 
-        // 辨識到封面時，顯示固定在螢幕上的圖片
-        target.addEventListener("targetFound", () => {
-          fixedOverlay.setAttribute("visible", "true");
+        sceneEl.addEventListener("loaded", () => {
+          const target = document.querySelector("[mindar-image-target]");
+
+          target.addEventListener("targetFound", () => {
+            // 辨識成功後，missTolerance 超大值讓圖片幾乎不消失
+            console.log("找到目標！");
+          });
         });
       });
     </script>
