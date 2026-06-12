@@ -17,18 +17,17 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false">
 
-      <a-assets>
-        <!-- 影片預載，autoplay + loop + muted（iOS 必須 muted 才能自動播放） -->
+      <a-assets timeout="10000">
         <video id="ar-video" src="./Haaland1080.mp4"
                autoplay loop muted playsinline
-               webkit-playsinline>
+               webkit-playsinline
+               preload="auto">
         </video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- 用 a-video 取代 a-image，src 指向影片 -->
         <a-video id="ar-vid" src="#ar-video" position="0 0 0" width="1" height="0.5625"></a-video>
       </a-entity>
 
@@ -44,9 +43,8 @@
 
           target.addEventListener("targetFound", () => {
             found = true;
-            // 辨識到時確保影片播放
             const video = document.getElementById("ar-video");
-            video.play();
+            video.play().catch(e => console.log("play error:", e));
           });
 
           target.addEventListener("targetLost", () => {
